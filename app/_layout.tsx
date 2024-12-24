@@ -37,6 +37,7 @@ export default function RootLayout() {
       <PersistGate loading={null} persistor={persistor}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="dashboard" options={{ headerShown: false }} />
           <Stack.Screen name="setup-profile" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
