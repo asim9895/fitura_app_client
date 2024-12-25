@@ -19,6 +19,7 @@ const SetupProfilePage = () => {
         weight: "60",
         gender: "female",
         profile_completed: true,
+        creation_date: new Date().toISOString().split("T")[0],
       })
     );
   };

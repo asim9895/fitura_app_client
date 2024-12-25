@@ -27,7 +27,8 @@ const TabsLayout = () => {
         tabBarStyle: {
           position: "absolute",
           backgroundColor: colors.background,
-          borderTopWidth: 0,
+          borderTopWidth: 0.7,
+          borderColor: colors.foreground,
           elevation: 0,
           height: Platform.OS === "ios" ? 85 : 70,
           paddingTop: 10,

@@ -7,4 +7,7 @@ export const icons = {
   steps_outlined: require("../assets/icons/steps-outlined.png"),
   water_outlined: require("../assets/icons/water-outlined.png"),
   calorie_outlined: require("../assets/icons/calorie-outlined.png"),
+  undo: require("../assets/icons/undo.png"),
+  streak: require("../assets/icons/streak.png"),
+  star: require("../assets/icons/star.png"),
 };

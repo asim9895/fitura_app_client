@@ -4,28 +4,24 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   Platform,
+  Image,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { Colors } from "@/theme/colors";
-import { useSelector } from "react-redux";
+
 import { AppRootState } from "@/redux/store";
 import { font_family } from "@/theme/font_family";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux_hooks";
-import { set_calorie_selected_date } from "@/redux/slices/calorie_slice";
-import { set_steps_selected_date } from "@/redux/slices/steps_slice";
-import { set_water_selected_date } from "@/redux/slices/water_slice";
-import { set_selected_date } from "@/redux/slices/user_slice";
 
-const DatesList: React.FC<{ route: "Calorie" | "Steps" | "Water" }> = ({
-  route,
-}) => {
-  const todays_date = new Date().toISOString().split("T")[0];
+import { set_selected_date } from "@/redux/slices/user_slice";
+import { formatDate, todays_date } from "@/utils/variables";
+import DateHeader from "./DateHeader";
+import { icons } from "@/data/icons";
+import { Route } from "@/types";
+
+const DatesList: React.FC<{ route: Route }> = ({ route }) => {
   const dispatch = useAppDispatch();
-  const { colors }: { colors: Colors } = useAppSelector(
-    (state: AppRootState) => state.theme
-  );
+  const { colors } = useAppSelector((state: AppRootState) => state.theme);
   const { selected_date } = useAppSelector((state) => state.user);
 
   const [dates, setDates] = useState<string[]>([]);
@@ -64,41 +60,15 @@ const DatesList: React.FC<{ route: "Calorie" | "Steps" | "Water" }> = ({
   };
 
   const renderItem = ({ item }: { item: string }) => {
-    const formatDate = (dateString: any) => {
-      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-
-      const date = new Date(dateString);
-
-      const day = date.getDate(); // Day of the month
-      const weekDay = daysOfWeek[date.getDay()]; // Day of the week
-      const month = months[date.getMonth()]; // Month name
-      const year = date.getFullYear().toString().slice(-2); // Last two digits of the year
-
-      return [day, weekDay, month, year];
-    };
-
     const result = formatDate(item);
     return (
       <TouchableOpacity
         style={[
           {
             backgroundColor:
-              selected_date === item ? "#007AFF" : colors.background,
+              selected_date === item ? colors.button : colors.foreground,
             padding: 10,
+            paddingVertical: 5,
             marginHorizontal: 5,
             borderRadius: 10,
             alignItems: "center",
@@ -111,20 +81,20 @@ const DatesList: React.FC<{ route: "Calorie" | "Steps" | "Water" }> = ({
         <Text
           style={{
             fontFamily: font_family.poppins_medium,
-            fontSize: 17,
-            color: selected_date === item ? colors.text_white : colors.text,
-          }}
-        >
-          {result[0]}
-        </Text>
-        <Text
-          style={{
-            fontFamily: font_family.poppins_medium,
-            fontSize: 13,
+            fontSize: 10,
             color: selected_date === item ? colors.text_white : colors.text,
           }}
         >
           {result[1]}
+        </Text>
+        <Text
+          style={{
+            fontFamily: font_family.poppins_medium,
+            fontSize: 15,
+            color: selected_date === item ? colors.text_white : colors.text,
+          }}
+        >
+          {result[0]}
         </Text>
         <Text
           style={{
@@ -139,8 +109,31 @@ const DatesList: React.FC<{ route: "Calorie" | "Steps" | "Water" }> = ({
     );
   };
 
+  const ITEM_WIDTH = 55; // Width of each item
+  const DAYS_IN_A_WEEK = 6;
+
+  const handleMomentumScrollEnd = (event: any) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / (ITEM_WIDTH * DAYS_IN_A_WEEK));
+    const newScrollPosition = index * (ITEM_WIDTH * DAYS_IN_A_WEEK);
+
+    flatListRef.current?.scrollToOffset({
+      offset: newScrollPosition,
+      animated: true,
+    });
+  };
+
   return (
-    <SafeAreaView style={{ marginTop: Platform.OS === "ios" ? 30 : 20 }}>
+    <View
+      style={{
+        marginTop: Platform.OS === "ios" ? 20 : 0,
+        borderBottomColor: colors.foreground,
+        borderBottomWidth: 0.5,
+        padding: 10,
+        paddingVertical: Platform.OS === "ios" ? 20 : 10,
+      }}
+    >
+      <DateHeader route={route} />
       <FlatList
         ref={flatListRef}
         data={dates}
@@ -155,13 +148,46 @@ const DatesList: React.FC<{ route: "Calorie" | "Steps" | "Water" }> = ({
           offset: 55 * index,
           index,
         })}
+        onMomentumScrollEnd={handleMomentumScrollEnd} // Handle week snapping
       />
+
       {!isToday && (
-        <TouchableOpacity style={styles.todayButton} onPress={scrollToToday}>
-          <Text style={styles.todayButtonText}>Today</Text>
+        <TouchableOpacity
+          onPress={scrollToToday}
+          activeOpacity={0.8}
+          style={{
+            alignItems: "center",
+            marginTop: 20,
+            position: "absolute",
+            top: Platform?.OS === "ios" ? "130%" : "110%",
+            right: "40%",
+            zIndex: 10,
+            backgroundColor: colors.text,
+            flexWrap: "wrap",
+            borderRadius: 30,
+            paddingVertical: Platform.OS === "ios" ? 6 : 3,
+            paddingHorizontal: 12,
+            justifyContent: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Image
+            source={icons.undo}
+            style={{ width: 15, height: 15, marginRight: 5 }}
+            tintColor={colors.background}
+          />
+          <Text
+            style={{
+              fontFamily: font_family.poppins_semiBold,
+              color: colors.background,
+              paddingTop: Platform.OS === "ios" ? 0 : 3,
+            }}
+          >
+            Today
+          </Text>
         </TouchableOpacity>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

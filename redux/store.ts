@@ -3,9 +3,6 @@ import { persistStore, persistReducer, PersistConfig } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import user_reducer from "./slices/user_slice";
 import theme_reducer from "./slices/theme_slice";
-import calorie_reducer from "./slices/calorie_slice";
-import steps_reducer from "./slices/steps_slice";
-import water_reducer from "./slices/water_slice";
 
 // Configure Redux Persist
 type RootState = ReturnType<typeof rootReducer>;
@@ -18,9 +15,6 @@ const persistConfig: PersistConfig<RootState> = {
 const rootReducer = combineReducers({
   user: user_reducer,
   theme: theme_reducer,
-  calorie: calorie_reducer,
-  steps: steps_reducer,
-  water: water_reducer,
 });
 
 // Create persisted reducer

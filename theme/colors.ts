@@ -26,19 +26,21 @@ export interface Colors {
   text_white: string;
   text_black: string;
   icon_color: string;
+  green: string;
 }
 
 // themes.js
 export const light: Colors = {
-  background: "#fbfbfa",
+  background: "#f4f4f8",
   text: "#000000",
   error: "crimson",
   foreground: "#fffefe",
   light_gray: "#868686",
-  button: "#5468ff",
+  button: "#007AFF",
   text_white: "#ffffff",
   text_black: "#000000",
   icon_color: "#868686",
+  green: "green",
 };
 
 export const dark: Colors = {
@@ -47,8 +49,9 @@ export const dark: Colors = {
   error: "crimson",
   foreground: "#222223",
   light_gray: "#868686",
-  button: "#5468ff",
+  button: "#007AFF",
   text_white: "#ffffff",
   text_black: "#000000",
   icon_color: "#868686",
+  green: "green",
 };
