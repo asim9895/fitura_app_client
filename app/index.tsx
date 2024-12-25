@@ -1,11 +1,7 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux_hooks";
-import {
-  clear_user_profile,
-  set_user_profile,
-} from "@/redux/slices/user_slice";
-import { Redirect, useNavigation } from "expo-router";
+import { useAppSelector } from "@/hooks/redux_hooks";
+import { Redirect } from "expo-router";
 
 const IndexPage = () => {
   const user = useAppSelector((state) => state.user);
@@ -13,7 +9,7 @@ const IndexPage = () => {
   return (
     <View>
       {user.profile_completed ? (
-        <Redirect href={"/dashboard"} />
+        <Redirect href={"/calorie-tracker"} />
       ) : (
         <Redirect href={"/setup-profile"} />
       )}

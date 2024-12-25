@@ -1,28 +1,30 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface UserProfileState {
+interface UserState {
   name: string;
   gender: string;
   height: string;
   weight: string;
   age: number | null;
   profile_completed?: boolean;
+  selected_date: string;
 }
 
-const initial_state: UserProfileState = {
+const initial_state: UserState = {
   name: "",
   gender: "",
   height: "",
   weight: "",
   age: null,
   profile_completed: false,
+  selected_date: new Date().toISOString().split("T")[0],
 };
 
 const user_slice = createSlice({
   name: "user",
   initialState: initial_state,
   reducers: {
-    set_user_profile: (state, action: PayloadAction<UserProfileState>) => {
+    set_user_profile: (state, action: PayloadAction<UserState>) => {
       state.name = action.payload.name;
       state.gender = action.payload.gender;
       state.age = action.payload.age;
@@ -38,9 +40,16 @@ const user_slice = createSlice({
       state.weight = "";
       state.profile_completed = false;
     },
+    set_selected_date: (
+      state,
+      action: PayloadAction<{ selected_date: string }>
+    ) => {
+      state.selected_date = action.payload.selected_date;
+    },
   },
 });
 
-export const { set_user_profile, clear_user_profile } = user_slice.actions;
+export const { set_user_profile, clear_user_profile, set_selected_date } =
+  user_slice.actions;
 
 export default user_slice.reducer;
